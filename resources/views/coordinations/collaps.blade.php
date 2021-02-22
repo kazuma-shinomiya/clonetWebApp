@@ -2,8 +2,8 @@
   $category_number = $cloth->category_number;
 @endphp
 <div class="card">
-  <div class="card-header" id="heading{{$category_number}}">
-    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{$category_number}}" aria-expanded="true" aria-controls="collapse{{$category_number}}">
+  <div class="card-header p-1" id="heading{{$category_number}}">
+    <button class="btn btn-link m-0" type="button" data-toggle="collapse" data-target="#collapse{{$category_number}}" aria-expanded="true" aria-controls="collapse{{$category_number}}">
       {{$category[$category_number]}}
     </button>
   </div>

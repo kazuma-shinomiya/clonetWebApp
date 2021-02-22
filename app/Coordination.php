@@ -28,6 +28,12 @@ class Coordination extends Model
         return $this->belongsToMany('App\User', 'likes')->withTimestamps();
     }
 
+    //tagsテーブルとのリレーション
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag')->withTimestamps();
+    }
+
     // ユーザーがいいね済みかどうか判別する
     public function isLikedBy(?User $user): bool
     {

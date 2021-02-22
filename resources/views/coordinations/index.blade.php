@@ -38,8 +38,11 @@ $category = config('category');
             @endforeach
           </div>
           <!-- タグ入力 -->
-          <div class="form-group mt-2">
-            <input type="text" id="tag_name" name="tag_name" class="form-control" placeholder="#○○のようにタグを追加しよう">
+          <div class="form-group mt-3">
+            <coordination-tags-input
+            :autocomplete-items='@json($allTagNames ?? [])'
+            >
+            </coordination-tags-input> 
           </div>
           <!-- 公開するかどうか選択 -->
           @include('coordinations.isOpenForm')
@@ -97,8 +100,12 @@ $category = config('category');
                         @endforeach
                       </div>
                       <!-- タグ入力 -->
-                      <div class="form-group mt-2">
-                        <input type="text" id="tag_name" name="tag_name" class="form-control" placeholder="#○○のようにタグを追加しよう">
+                      <div class="form-group mt-3">
+                        <coordination-tags-input
+                        :initial-tags='@json($tagNames[$loop->iteration - 1] ?? [])'
+                        :autocomplete-items='@json($allTagNames ?? [])'
+                        >
+                        </coordination-tags-input>
                       </div>
                       <!-- 公開するかどうか選択 -->
                       @include('coordinations.isOpenForm')
@@ -125,6 +132,19 @@ $category = config('category');
             <div>
               @foreach($coordination->clothes as $coordination_cloth)
                 @include('coordinations.cardDetail')
+              @endforeach
+            </div>
+            <div>
+              @foreach($coordination->tags as $tag)
+                @if($loop->first)
+                  <div class="card-text line-height">
+                @endif
+                  <a href="{{ route('search_coordination', ['name' => $tag->name]) }}" class="border p-1 mr-1 mt-1 text-muted">
+                    {{$tag->hashtag}}
+                  </a>
+                @if($loop->last)
+                  </div>
+                @endif
               @endforeach
             </div>
           </div>
