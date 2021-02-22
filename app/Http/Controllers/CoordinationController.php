@@ -19,7 +19,7 @@ class CoordinationController extends Controller
      * 
      * @return view
      */
-    public function index(CoordinationRequest $request)
+    public function index(CoordinationRequest $request,Coordination $coordination)
     {
         // Clothモデルのデータを取得
         $clothes = $request->user()->clothes;
@@ -27,13 +27,6 @@ class CoordinationController extends Controller
         //Coordinationモデルのデータを取得
         $coordinations=$request->user()->coordinations;
         
-        //いいねの件数取得
-        // foreach($outfits as $outfit)
-        // {
-        //     $like_count=0;
-        //     $like_count=Like::where('outfit_id',$outfit['id'])->count();
-        //     $outfit['like']=$like_count;
-        // }
 
         //編集画面用のtag
         $tagNames = [];
@@ -58,7 +51,36 @@ class CoordinationController extends Controller
      * @return view
      */
 
-    public function search(CoordinationRequest $request,string $name)
+    public function search(Request $request)
+    {
+        //ログイン者のユーザーidを取得
+        $id=Auth::id();
+        //フォームから受け取る
+        $keyword=$request->tag_search;
+
+        if(!empty($keyword))
+        {
+            $coordinations=Coordination::where('user_id',$id)->whereHas('tags', function($query) use($keyword) {
+                $query->where('name','like',"%$keyword%");
+            })->get();
+        }else{
+            return redirect(route('show_coordination'));
+        }
+        
+
+        // Clothモデルのデータを取得
+        $clothes = $request->user()->clothes;
+        
+       return view('coordinations.index',compact('clothes','coordinations'));
+    }
+
+    /**
+     * コーディネートのタグごとのページを表示
+     * 
+     * @return view
+     */
+
+    public function searchTag(CoordinationRequest $request,string $name)
     {
         //ログイン者のユーザーidを取得
         $id=Auth::id();
@@ -69,15 +91,6 @@ class CoordinationController extends Controller
         // Clothモデルのデータを取得
         $clothes = $request->user()->clothes;
         
-
-        // //いいねの件数取得
-        // foreach($outfits as $outfit)
-        // {
-        //     $like_count=0;
-        //     $like_count=Like::where('outfit_id',$outfit['id'])->count();
-        //     $outfit['like']=$like_count;
-        // }
-
     
         
         return view('coordinations.index',compact('clothes','coordinations'));
@@ -111,22 +124,6 @@ class CoordinationController extends Controller
                 $coordination->tags()->attach($tag);
             });
 
-            
-
-            //タグを追加
-            //正規表現で＃以降を判別
-            // preg_match_all('/#([a-zA-Z0-9０-９ぁ-んァ-ヶー一-龠]+)/u', $request->tag_name, $match);
-            // //Tagテーブルに無いtagをデータで追加
-            // foreach($match[1] as $input)
-            // {
-            //     $tag=Tag::firstOrCreate(['name'=>$input]);
-            //     $tag=null;
-            //     //入力されたタグのidを取得
-            //     $tag_id=Tag::where('name',$input)->get(['id']);
-            //     //タグとoutfitの紐付け
-            //     $outfit=Outfit::find($outfit_id);
-            //     $outfit->tags()->attach($tag_id);
-            // }
 
         //     \DB::commit();
         // }catch(\Throwable $e)
@@ -164,21 +161,6 @@ class CoordinationController extends Controller
                 $tag=Tag::firstOrCreate(['name' => $tagName]);
                 $coordination->tags()->attach($tag);
             });
-            //現在の紐付けを解除
-            // $coordination->tags()->detach();
-            //正規表現で＃以降を判別
-            // preg_match_all('/#([a-zA-Z0-9０-９ぁ-んァ-ヶー一-龠]+)/u',$request->tag_name, $match);
-            //Tagテーブルに無いtagをデータで追加
-            // foreach($match[1] as $input)
-            // {
-            //     $tag=Tag::firstOrCreate(['name'=>$input]);
-            //     $tag=null;
-            //     //入力されたタグのidを取得
-            //     $tag_id=Tag::where('name',$input)->get(['id']);
-            //     //タグとoutfitの紐付け
-            //     $outfit=Outfit::find($outfit_id);
-            //     $outfit->tags()->attach($tag_id);
-            // }
     
         //     \DB::commit();
         // }catch(\Throwable $e)

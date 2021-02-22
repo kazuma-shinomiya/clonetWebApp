@@ -22,6 +22,30 @@ class ArticleController extends Controller
 
         return view('articles.index', compact('articles'));
     }
+    /**
+     * みんなのコーディネートの検索
+     * 
+     * @return view
+     */
+
+    public function search(Request $request)
+    {
+        //フォームから受け取る
+        $keyword=$request->tag_search;
+
+        if(!empty($keyword))
+        {
+            $articles=Coordination::whereHas('tags', function($query) use($keyword) {
+                $query->where('name','like',"%$keyword%");
+            })->get();
+        }else{
+            return redirect(route('show_article'));
+        }
+        
+
+        
+       return view('articles.index',compact('articles'));
+    }
 
     /**
      * いいねをつける
@@ -38,7 +62,11 @@ class ArticleController extends Controller
             'countLikes' => $article->count_likes,
         ];
     }
-
+    /**
+     * いいねを消す
+     * 
+     * @return view
+     */
     public function unlike(Request $request, Coordination $article)
     {
         $article->likes()->detach($request->user()->id);

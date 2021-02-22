@@ -75,6 +75,10 @@ $category = config('category');
       <div class="col-lg-6">
         <div class="card m-3">
           <div class="card-header">
+            <!-- いいねの数 -->
+            <i class="fas fa-heart mr-1 red-text"></i>
+            {{ $coordination->count_likes}}
+
             <!-- 削除ボタン -->
             @include('coordinations.delete')
             <!-- 編集ボタン -->
@@ -139,7 +143,7 @@ $category = config('category');
                 @if($loop->first)
                   <div class="card-text line-height">
                 @endif
-                  <a href="{{ route('search_coordination', ['name' => $tag->name]) }}" class="border p-1 mr-1 mt-1 text-muted">
+                  <a href="{{ route('tag_coordination', ['name' => $tag->name]) }}" class="border p-1 mr-1 mt-1 text-muted">
                     {{$tag->hashtag}}
                   </a>
                 @if($loop->last)
