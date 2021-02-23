@@ -2,13 +2,18 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// メール認証
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Auth\MustVerifyEmail;
+
+use App\Notifications\CustomVerifyEmail;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
-    use Notifiable;
+    use MustVerifyEmail,Notifiable;
 
     public function clothes(){
         return $this->hasMany('App\Cloth');
@@ -43,4 +48,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //メール認証
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new CustomVerifyEmail());
+    }
 }

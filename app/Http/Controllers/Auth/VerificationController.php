@@ -28,6 +28,12 @@ class VerificationController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    public function redirectPath()
+    {
+        return '/';
+        
+    }
+
     /**
      * Create a new controller instance.
      *

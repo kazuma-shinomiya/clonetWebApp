@@ -16,7 +16,7 @@ Route::get('/tags/{name}', 'TagController@show')->name('tags.show');
 
 
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => 'verified'], function() {
     //服一覧を表示
     Route::get('/cloth/index','ClothController@index')->name('show_cloth');
     //服のカテゴリで絞り込み
@@ -45,6 +45,6 @@ Route::group(['middleware' => 'auth'], function() {
 
 
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
